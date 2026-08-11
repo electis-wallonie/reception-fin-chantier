@@ -267,10 +267,63 @@
     text-decoration:underline;
   }
   .clear-sign:hover{ color:var(--orange); }
+  .parts-section{
+    margin-bottom:20px;
+  }
+  .parts-table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    margin-top:8px;
+  }
+  .parts-table th{
+    text-align:left;
+    background:var(--gray-bg);
+    padding:7px 8px;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+    color:#333;
+  }
+  .parts-table td{
+    padding:0;
+    border-bottom:1px solid #ddd;
+  }
+  .parts-table td input{
+    width:100%;
+    border:none;
+    background:transparent;
+    padding:8px;
+    font-family:"Georgia",serif;
+    font-size:13.5px;
+    color:var(--dark);
+  }
+  .parts-table td input:focus{ outline:none; background:#fdf3ec; }
+  .parts-table th.col-piece{ width:75%; }
+  .parts-table th.col-qte{ width:25%; }
+  .add-row-btn{
+    margin-top:8px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    font-weight:bold;
+    color:var(--orange-dark);
+    background:none;
+    border:1px dashed var(--orange);
+    padding:6px 12px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .add-row-btn:hover{ background:#fdf3ec; }
+  .parts-note{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11.5px;
+    color:#888;
+    margin-top:8px;
+    font-style:italic;
+  }
   @media print{
-    .sign-tools{ display:none; }
-    .sign-pad{ border:1px solid #000; }
-    .stamp-area{ border:1px solid #000; }
+    .add-row-btn{ display:none; }
   }
   .actions{
     max-width:820px;
@@ -352,6 +405,30 @@
     <div class="field">
       <label for="autre">Autre / précisions</label>
       <input type="text" id="autre" placeholder="Précisions complémentaires">
+    </div>
+
+    <div class="parts-section">
+      <div class="check-group">Pièces à remplacer</div>
+      <table class="parts-table" id="parts-table">
+        <thead>
+          <tr>
+            <th class="col-piece">Désignation de la pièce</th>
+            <th class="col-qte">Qté</th>
+          </tr>
+        </thead>
+        <tbody id="parts-tbody">
+          <tr>
+            <td><input type="text" placeholder="Ex : Cylindre européen"></td>
+            <td><input type="text" placeholder="1"></td>
+          </tr>
+          <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="add-row-btn" onclick="addPartRow()">+ Ajouter une pièce</button>
+      <p class="parts-note">Le remplacement d'une pièce peut allonger le délai d'intervention (2 jours ou plus) selon sa disponibilité.</p>
     </div>
 
     <div class="field">
@@ -503,10 +580,18 @@
   window.addEventListener('load', resizeCanvas);
   resizeCanvas();
 
+  function addPartRow(){
+    const tbody = document.getElementById('parts-tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text"></td><td><input type="text"></td>';
+    tbody.appendChild(row);
+  }
+
   function resetForm(){
     document.querySelectorAll('input[type=text], input[type=date]').forEach(i => i.value = '');
     document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
     document.getElementById('entreprise').value = 'ZMR Fermeture';
+    document.getElementById('parts-tbody').querySelectorAll('tr').forEach((tr, idx) => { if(idx > 1) tr.remove(); });
     clearSignature();
   }
 </script>
